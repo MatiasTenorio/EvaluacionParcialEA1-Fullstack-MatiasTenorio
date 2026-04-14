@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.Taskflow.EvaluacionParcialEA1.model.Tarea;
 import com.Taskflow.EvaluacionParcialEA1.service.TareaService;
 
-@RequestMapping("api/tareas")
+@RequestMapping("/api/tareas")
+@RestController
 public class TareaController {
     @Autowired
     private TareaService service;
