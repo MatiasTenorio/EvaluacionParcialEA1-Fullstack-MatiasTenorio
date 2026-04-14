@@ -1,7 +1,10 @@
 package com.Taskflow.EvaluacionParcialEA1.repository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Repository;
 
@@ -17,41 +20,37 @@ public class TareaRepository {
     }
 
     public Tarea getIdTarea(Long id) {
-        for (Tarea t:listaTareas){
-            if(t.getId().equals(id)){
-                return t;
-            }
-        }
-        return null;
+        Optional<Tarea> optTarea = listaTareas.stream().filter(t -> t.getId().equals(id)).findFirst();
+        return optTarea.get();
     }
 
     public void save(Tarea t){
+        t.setFechaCreacion(LocalDate.now());
         listaTareas.add(t);
     }
 
-    public boolean updateEstado(Long id){
-        for (Tarea t : listaTareas) {
-            if(t.getId().equals(id)){
-                return true;
+    public int  updateEstado(Long id, int opc){
+        for(int i = 0; i < listaTareas.size(); i++){
+            if(listaTareas.get(i).getId().equals(id)){
+                switch(opc){
+                    default: return 2;
+                    case 1: listaTareas.get(i).setEstado(estado.PENDIENTE);
+                    case 2: listaTareas.get(i).setEstado(estado.EN_PROGRESO);
+                    case 3: listaTareas.get(i).setEstado(estado.COMPLETADA);
+                    case 4: listaTareas.get(i).setEstado(estado.CANCELADA);
+                    return 1;
+                }
             }
         }
-        return false;
+        return 0;
     }
 
-    public void delete(Long id){
-        for (Tarea t : listaTareas) {
-            if (t.getId().equals(id)) {
-                listaTareas.remove(t);
-            }
-        }
+    public boolean delete(Long id){
+        return listaTareas.removeIf(t -> t.getId().equals(id));
     }
 
-    public Tarea filtrarEstado(estado e){
-        for (Tarea t : listaTareas) {
-            if (t.getEstado().equals(e)) {
-                return t;
-            }
-        }
-        return null;
+    public List<Tarea> filtrarEstado(String e){
+        Stream<Tarea> streamTarea = listaTareas.stream().filter(t -> t.getEstado().toString().equals(e));
+        return streamTarea.toList();
     }
 }
